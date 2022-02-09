@@ -1,2 +1,2 @@
 # DataCompression
-Algorithms for Source Coding, Quantization and Source Transform
+Algorithms for Entropy Coding, Quantization and Source Transform
