@@ -21,7 +21,7 @@ classdef Encoder
         dct;
         invdct;
         % --- Parameters of the Quantizer
-        QS = 5; % Quantizer Scale
+        QS = 20; % Quantizer Scale
         intraQ = [8 16 19 22 26 27 29 34; 
                   16 16 22 24 27 29 34 37;
                   19 22 26 27 29 34 34 38;
@@ -33,14 +33,7 @@ classdef Encoder
               
         nonIntraQ;
         quantizedValuesFrames;
-        
-        
-        % --- downSampling Method
-        % 0 : rows & columns
-        % 1: only columns
-        % 2: none
-        downsamppleType = 0 
-        
+               
                         
     end
     
@@ -71,7 +64,7 @@ classdef Encoder
         
         
         % === Encoder
-        function [dct,moVe] = encode(obj)
+        function [qValues,moVe] = encode(obj)
                        
             shift = 0;
             mvIdx = 0;
@@ -119,6 +112,9 @@ classdef Encoder
                     
                     % --- Compute Residual
                     obj.residaulFrames(:,:,i) = frame - frameHat;
+                    
+                    %plotting motion vectors using Quiver
+
                      
                     % --- Discrete Cosine Transform (DCT)
                     obj.dctCoefficientFrames(:,:,i) = dctTransform(obj,obj.residaulFrames(:,:,i));
@@ -201,25 +197,12 @@ classdef Encoder
                 
             end
             
-        dct = obj.quantizedValuesFrames;
+        qValues = obj.quantizedValuesFrames;
         moVe = obj.motionVectors;
         
         end
         
-        
-        % =============== Functions For Cb Cr =============== %
-        function [downCb, downCr] = downSample(obj,Cb,Cr)
-            indxColumns = 1:2:obj.width;
-            indxRows = 1:2:obj.height;
-            if obj.downsamppleType == 0
-                downCb = Cb(indxRows,indxColumns);
-                downCr = Cr(indxRows,indxColumns);
-            elseif obj.downsamppleType == 1
-                downCb = Cb(:,indxColumns);
-                downCr = Cr(:,indxColumns);
-            end           
-        end
-        
+               
         
         % =============== Functions For DCT Tranform =============== %
         % === DCT Transform
